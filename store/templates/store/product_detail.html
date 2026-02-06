@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.brand }} {{ product.name }} | STEPUP</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+        }
+
+        /* PAGE WRAPPER */
+        .product-page {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 35px;
+            background: white;
+            border-radius: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        /* IMAGE */
+        .product-image img {
+            width: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        /* DETAILS */
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-badge {
+            background: #f0f0f0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            width: fit-content;
+            margin-bottom: 14px;
+        }
+
+        .product-title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 28px;
+            color: #1a8f3c;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        .meta-chip {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .description h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .description p {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        /* SIZE SECTION */
+        .size-section {
+            margin-bottom: 30px;
+        }
+
+        .size-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 14px;
+        }
+
+        .size-btn {
+            padding: 14px 0;
+            border-radius: 10px;
+            border: 1.5px solid #ccc;
+            background: white;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .size-btn:hover {
+            border-color: black;
+        }
+
+        .size-btn.selected {
+            background: black;
+            color: white;
+            border-color: black;
+        }
+
+        .size-btn.disabled {
+            background: #f1f1f1;
+            color: #aaa;
+            cursor: not-allowed;
+            border-color: #ddd;
+        }
+
+        /* ADD TO CART */
+        .add-cart {
+            margin-top: 10px;
+            padding: 16px;
+            width: 100%;
+            max-width: 280px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-cart:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .back {
+            margin-top: 22px;
+            text-decoration: none;
+            color: black;
+            font-weight: 500;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="product-page">
+
+    <!-- LEFT IMAGE -->
+    <div class="product-image">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <img src="{% static 'store/no-image.png' %}">
+        {% endif %}
+    </div>
+
+    <!-- RIGHT DETAILS -->
+    <div class="product-details">
+
+        <span class="brand-badge">{{ product.brand }}</span>
+
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="price">₹ {{ product.price }}</div>
+
+        <div class="meta-row">
+            <span class="meta-chip">{{ product.category }}</span>
+            <span class="meta-chip">{{ product.gender }}</span>
+        </div>
+
+        <div class="description">
+            <h3>Product Details</h3>
+            <p>{{ product.description }}</p>
+        </div>
+
+        <!-- SIZE + CART -->
+        <form method="post" action="{% url 'add-to-cart' product.id %}">
+            {% csrf_token %}
+
+            <div class="size-section">
+                <h4>Select Size</h4>
+
+                <div class="size-grid">
+                    {% for s in sizes %}
+                        <button type="button"
+                                class="size-btn {% if s.stock == 0 %}disabled{% endif %}"
+                                {% if s.stock == 0 %}disabled{% endif %}
+                                onclick="selectSize('{{ s.size }}', this)">
+                            {{ s.size }}
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <input type="hidden" name="size" id="selectedSize">
+            </div>
+
+            <button class="add-cart" id="cartBtn" disabled>Add to Cart</button>
+        </form>
+
+        <a href="/" class="back">← Back to products</a>
+
+    </div>
+
+</div>
+
+<script>
+function selectSize(size, btn) {
+    document.getElementById("selectedSize").value = size;
+
+    document.querySelectorAll(".size-btn").forEach(b => {
+        b.classList.remove("selected");
+    });
+
+    btn.classList.add("selected");
+
+    document.getElementById("cartBtn").disabled = false;
+}
+</script>
+
+</body>
+</html>

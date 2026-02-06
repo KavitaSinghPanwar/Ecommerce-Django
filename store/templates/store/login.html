@@ -1,0 +1,76 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'store/auth.css' %}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+          <!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<script>
+function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const icon = document.querySelector(".toggle-password");
+
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        passwordField.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+
+<body>
+<div class="brand-box">
+  <h1 class="brand-name">STEPUP</h1>
+  <p class="brand-tagline">Rise with Every Step</p>
+</div>
+
+
+<div class="auth-card">
+    <div class="auth-title">Login</div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="input-box">
+            <i class="fa-solid fa-user"></i>
+            <input type="email" name="email" placeholder="Email" required>
+        </div>
+
+        
+        <div class="input-box password-box">
+    <i class="fa-solid fa-lock"></i>
+    <input type="password" id="password" name="password" placeholder="Password" required>
+    <i class="fa-solid fa-eye toggle-password" onclick="togglePassword()"></i>
+</div>
+
+
+        <button class="auth-btn" type="submit">LOGIN</button>
+    </form>
+
+    <div class="auth-links">
+        <a href="{% url 'signup' %}">Create Account</a> |
+        <a href="{% url 'forgot-password' %}">Forgot Password?</a>
+    </div>
+</div>
+
+</body>
+</html>

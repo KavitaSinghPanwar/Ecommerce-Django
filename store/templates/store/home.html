@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>STEPUP | Footwear Store</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 30px;
+            background: black;
+            color: white;
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-search {
+            display: flex;
+            gap: 10px;
+            width: 40%;
+        }
+
+        .nav-search input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: none;
+            font-size: 15px;
+        }
+
+        .nav-search button {
+            padding: 10px 18px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link, .cart-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .cart-btn {
+            background: white;
+            color: black;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        /* FILTER BAR */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 25px;
+            background: white;
+            margin: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px 14px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            min-width: 160px;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .filter-actions button {
+            padding: 10px 18px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .clear-btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            background: #eee;
+            color: black;
+            text-decoration: none;
+        }
+
+        /* PRODUCTS */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .price {
+            color: green;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="brand">STEPUP</div>
+
+    <form method="get" action="/" class="nav-search">
+        <input type="text" name="q" placeholder="Search footwear or brands"
+               value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="nav-right">
+        <a href="/login/" class="nav-link">Account</a>
+        <a href="/cart/" class="cart-btn">🛒 Cart</a>
+    </div>
+</header>
+
+<h2 style="text-align:center; margin-top:20px;">👟 Footwear Collection</h2>
+
+<!-- FILTERS -->
+<form method="get" class="filter-bar">
+    <input type="hidden" name="q" value="{{ request.GET.q }}">
+
+    <div class="filter-group">
+        <label>Gender</label>
+        <select name="gender">
+            <option value="">All</option>
+            <option value="men">Men</option>
+            <option value="women">Women</option>
+            <option value="kids">Kids</option>
+            <option value="unisex">Unisex</option>
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label>Brand</label>
+        <select name="brand">
+            <option value="">All</option>
+            {% for b in brands %}
+                <option value="{{ b }}">{{ b }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label>Min Price</label>
+        <input type="number" name="min_price">
+    </div>
+
+    <div class="filter-group">
+        <label>Max Price</label>
+        <input type="number" name="max_price">
+    </div>
+
+    <div class="filter-group">
+        <label>Sort</label>
+        <select name="sort">
+            <option value="">Default</option>
+            <option value="low">Low → High</option>
+            <option value="high">High → Low</option>
+        </select>
+    </div>
+
+    <div class="filter-actions">
+        <button type="submit">Apply</button>
+        <a href="/" class="clear-btn">Clear</a>
+    </div>
+</form>
+
+<!-- PRODUCTS -->
+<div class="container">
+    {% for product in products %}
+        <a href="{% url 'product-detail' product.id %}" style="text-decoration:none; color:inherit;">
+            <div class="card">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                    <img src="{% static 'store/no-image.png' %}">
+                {% endif %}
+                <h3>{{ product.brand }} {{ product.name }}</h3>
+                <p>{{ product.category }} | {{ product.gender }}</p>
+                <p class="price">₹ {{ product.price }}</p>
+            </div>
+        </a>
+    {% empty %}
+        <p style="text-align:center;">No products found</p>
+    {% endfor %}
+</div>
+
+<footer>
+    © 2026 STEPUP. All rights reserved.
+</footer>
+
+</body>
+</html>

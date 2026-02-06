@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Cart | STEPUP</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 30px;
+        }
+
+        /* LEFT CART */
+        .cart-box {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .cart-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 20px;
+            padding: 18px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .cart-item img {
+            width: 100%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .item-info h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .item-info p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .price {
+            font-weight: 700;
+            color: #1a8f3c;
+            margin-top: 6px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* RIGHT SUMMARY */
+        .summary {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .summary h3 {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .summary-row.total {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: black;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .checkout-btn:hover {
+            opacity: 0.9;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        a.back {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: black;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <!-- LEFT CART ITEMS -->
+    <div class="cart-box">
+        <div class="cart-title">🛒 My Cart</div>
+
+        {% if cart_items %}
+            {% for item in cart_items %}
+            <div class="cart-item">
+
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+
+                <div class="item-info">
+                    <h3>{{ item.product.brand }} {{ item.product.name }}</h3>
+                    <p>Size: {{ item.size }}</p>
+                    <p>Quantity: {{ item.quantity }}</p>
+                    <div class="price">₹ {{ item.product.price }}</div>
+
+                    <form method="post" action="{% url 'remove-from-cart' item.id %}">
+                        {% csrf_token %}
+                        <button class="remove-btn">Remove</button>
+                    </form>
+                </div>
+
+                <div class="price">
+                    ₹ {{ item.product.price|floatformat:0 }}
+                </div>
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                Your cart is empty 😕  
+                <br>
+                <a href="/" class="back">← Continue shopping</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- RIGHT SUMMARY -->
+    <div class="summary">
+        <h3>Order Summary</h3>
+
+        <div class="summary-row">
+            <span>Items</span>
+            <span>{{ cart_items|length }}</span>
+        </div>
+
+        <div class="summary-row">
+            <span>Delivery</span>
+            <span>Free</span>
+        </div>
+
+        <div class="summary-row total">
+            <span>Total</span>
+            <span>₹ {{ total_price }}</span>
+        </div>
+
+        <button class="checkout-btn">
+            Proceed to Checkout
+        </button>
+    </div>
+
+</div>
+
+</body>
+</html>
