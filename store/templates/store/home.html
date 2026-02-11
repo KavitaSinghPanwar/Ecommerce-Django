@@ -4,7 +4,6 @@
 <head>
     <title>STEPUP | Footwear Store</title>
 
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -14,7 +13,6 @@
             margin: 0;
         }
 
-        /* NAVBAR */
         .navbar {
             display: flex;
             align-items: center;
@@ -30,10 +28,28 @@
             letter-spacing: 2px;
         }
 
+        .nav-center {
+            display: flex;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
         .nav-search {
             display: flex;
             gap: 10px;
-            width: 40%;
+            width: 35%;
         }
 
         .nav-search input {
@@ -55,13 +71,8 @@
 
         .nav-right {
             display: flex;
-            gap: 20px;
-        }
-
-        .nav-link, .cart-btn {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
+            gap: 18px;
+            align-items: center;
         }
 
         .cart-btn {
@@ -70,64 +81,36 @@
             padding: 8px 14px;
             border-radius: 6px;
             font-weight: 600;
-        }
-
-        /* FILTER BAR */
-        .filter-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 25px;
-            background: white;
-            margin: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            font-size: 14px;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-
-        .filter-group select,
-        .filter-group input {
-            padding: 10px 14px;
-            font-size: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            min-width: 160px;
-        }
-
-        .filter-actions {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
-        .filter-actions button {
-            padding: 10px 18px;
-            background: black;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .clear-btn {
-            padding: 10px 18px;
-            border-radius: 6px;
-            background: #eee;
-            color: black;
             text-decoration: none;
+            position: relative;
         }
 
-        /* PRODUCTS */
+        .cart-badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: red;
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: 600;
+        }
+
+        .user-btn {
+            background: white;
+            color: black;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s ease;
+        }
+
+        .user-btn:hover {
+            background: #eaeaea;
+        }
+
         .container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -159,85 +142,73 @@
             font-weight: 600;
         }
 
-        footer {
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
             text-align: center;
-            padding: 15px;
-            background: white;
-            margin-top: 30px;
+            margin-top: 40px;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        footer {
+            background: #111;
+            color: #bbb;
+            padding: 25px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #bbb;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            color: white;
         }
     </style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
 <header class="navbar">
     <div class="brand">STEPUP</div>
 
+    <nav class="nav-center">
+        <a href="{% url 'home' %}" class="nav-link">Home</a>
+        <a href="{% url 'collection' %}" class="nav-link">Collection</a>
+        <a href="{% url 'about' %}" class="nav-link">About</a>
+        <a href="{% url 'contact' %}" class="nav-link">Contact</a>
+    </nav>
+
     <form method="get" action="/" class="nav-search">
-        <input type="text" name="q" placeholder="Search footwear or brands"
-               value="{{ request.GET.q }}">
+        <input type="text" name="q" placeholder="Search footwear or brands" value="{{ request.GET.q }}">
         <button type="submit">Search</button>
     </form>
 
     <div class="nav-right">
-        <a href="/login/" class="nav-link">Account</a>
-        <a href="/cart/" class="cart-btn">🛒 Cart</a>
+        <a href="{% url 'account' %}" class="user-btn">STEPUP User</a>
+
+        <a href="{% url 'cart' %}" class="cart-btn">
+            Cart
+            {% if cart_count > 0 %}
+                <span class="cart-badge">{{ cart_count }}</span>
+            {% endif %}
+        </a>
     </div>
 </header>
 
-<h2 style="text-align:center; margin-top:20px;">👟 Footwear Collection</h2>
+<div>
+    <h2 class="section-title">👟 Footwear Collection</h2>
+    <p class="section-subtitle">Explore sneakers, sandals & more</p>
+</div>
 
-<!-- FILTERS -->
-<form method="get" class="filter-bar">
-    <input type="hidden" name="q" value="{{ request.GET.q }}">
-
-    <div class="filter-group">
-        <label>Gender</label>
-        <select name="gender">
-            <option value="">All</option>
-            <option value="men">Men</option>
-            <option value="women">Women</option>
-            <option value="kids">Kids</option>
-            <option value="unisex">Unisex</option>
-        </select>
-    </div>
-
-    <div class="filter-group">
-        <label>Brand</label>
-        <select name="brand">
-            <option value="">All</option>
-            {% for b in brands %}
-                <option value="{{ b }}">{{ b }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="filter-group">
-        <label>Min Price</label>
-        <input type="number" name="min_price">
-    </div>
-
-    <div class="filter-group">
-        <label>Max Price</label>
-        <input type="number" name="max_price">
-    </div>
-
-    <div class="filter-group">
-        <label>Sort</label>
-        <select name="sort">
-            <option value="">Default</option>
-            <option value="low">Low → High</option>
-            <option value="high">High → Low</option>
-        </select>
-    </div>
-
-    <div class="filter-actions">
-        <button type="submit">Apply</button>
-        <a href="/" class="clear-btn">Clear</a>
-    </div>
-</form>
-
-<!-- PRODUCTS -->
 <div class="container">
     {% for product in products %}
         <a href="{% url 'product-detail' product.id %}" style="text-decoration:none; color:inherit;">
@@ -258,8 +229,38 @@
 </div>
 
 <footer>
-    © 2026 STEPUP. All rights reserved.
+    <p>
+        <a href="{% url 'about' %}">About Us</a> |
+        <a href="{% url 'contact' %}">Contact Us</a>
+    </p>
+    <p>© 2026 STEPUP. All rights reserved.</p>
 </footer>
+
+<!-- ✅ VOICE LOGIN SCRIPT (Bottom Placement) -->
+{% if voice_login %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function speakLogin() {
+        const msg = new SpeechSynthesisUtterance("You are logged in successfully");
+        msg.lang = "en-IN";
+        msg.rate = 1;
+        msg.pitch = 1;
+        msg.volume = 1;
+
+        speechSynthesis.speak(msg);
+
+        // remove listener after speaking once
+        document.removeEventListener("click", speakLogin);
+    }
+
+    // Wait for first user interaction
+    document.addEventListener("click", speakLogin);
+
+});
+</script>
+{% endif %}
+
 
 </body>
 </html>

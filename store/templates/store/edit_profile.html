@@ -1,0 +1,16 @@
+<h2>Edit Profile</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Email</label><br>
+    <input type="email" name="email" value="{{ user.email }}"><br><br>
+
+    <label>New Password</label><br>
+    <input type="password" name="password" placeholder="Leave blank to keep old"><br><br>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<br>
+<a href="{% url 'account' %}">← Back to Account</a>

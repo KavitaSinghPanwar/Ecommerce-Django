@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="speak()">Click Me</button>
+
+<script>
+function speak() {
+    const msg = new SpeechSynthesisUtterance("Voice is working perfectly");
+    speechSynthesis.speak(msg);
+}
+</script>
+
+</body>
+</html>

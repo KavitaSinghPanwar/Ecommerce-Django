@@ -27,6 +27,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'eco.urls'
@@ -48,6 +49,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'eco.wsgi.application'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'stepupcompany12345@gmail.com'      # 👈 your Gmail zaya vnol fcky huvt
+EMAIL_HOST_PASSWORD = 'mxccqgmwfnfqzizq'        # 👈 app password (no spaces)
+
+DEFAULT_FROM_EMAIL = 'STEPUP <stepupcompany12345@gmail.com>'
+
+
 
 DATABASES = {
     'default': {

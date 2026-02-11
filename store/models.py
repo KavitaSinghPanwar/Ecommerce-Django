@@ -40,6 +40,7 @@ class Product(models.Model):
         return f"{self.brand} - {self.name}"
 
 
+
 # ---------------- SHOE SIZE & STOCK ----------------
 class ShoeSize(models.Model):
     SIZE_CHOICES = [
@@ -57,18 +58,51 @@ class ShoeSize(models.Model):
         related_name="sizes"
     )
     size = models.CharField(max_length=5, choices=SIZE_CHOICES)
-    stock = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.product.name} - Size {self.size}"
-    # ---------------- CART ----------------
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        db_table = "store_cart"
+
+    def __str__(self):
+        return f"Cart of {self.user.email}"
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=10)
     quantity = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        db_table = "store_cartitem"
+
+    def __str__(self):
+        return f"{self.product.name} ({self.size})"
+# ---------------- ORDER ----------------
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "store_order"
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.user.email}"
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.CharField(max_length=10)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = "store_orderitem"
+
+    def __str__(self):
+        return f"{self.product.name} ({self.size})"

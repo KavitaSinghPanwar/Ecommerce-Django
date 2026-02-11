@@ -1,0 +1,18 @@
+<h2>Checkout</h2>
+
+{% for item in items %}
+<p>
+    {{ item.product.name }} |
+    Size: {{ item.size }} |
+    Qty: {{ item.quantity }} |
+    ₹{{ item.product.price }}
+</p>
+{% endfor %}
+
+<hr>
+<h3>Total: ₹{{ total_price }}</h3>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Place Order</button>
+</form>

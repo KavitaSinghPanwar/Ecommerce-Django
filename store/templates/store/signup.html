@@ -1,55 +1,67 @@
 {% load static %}
-{% if messages %}
-    {% for message in messages %}
-        {% if message.tags == 'success' %}
-            <div class="success-popup">
-                {{ message }}
-            </div>
-        {% endif %}
-    {% endfor %}
-{% endif %}
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Sign Up</title>
-    <link rel="stylesheet" href="{% static 'store/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'store/auth.css' %}?v=2">
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="auth-card">
-    <div class="auth-title">Create Account</div>
+<div class="page-wrapper">
 
-    {% if error %}
-        <div class="message">{{ error }}</div>
-    {% endif %}
-
-    <form method="post">
-        {% csrf_token %}
-
-        <div class="input-box">
-            <i class="fa-solid fa-envelope"></i>
-            <input type="email" name="email" placeholder="Email" required>
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" name="password" placeholder="Password" required>
-        </div>
-
-        <div class="input-box">
-            <i class="fa-solid fa-lock"></i>
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-        </div>
-
-        <button class="auth-btn" type="submit">SIGN UP</button>
-    </form>
-
-    <div class="auth-links">
-        <a href="{% url 'login' %}">Already have an account?</a>
+    <!-- LEFT BRAND -->
+    <div class="brand-box">
+        <h1 class="brand-name">STEPUP</h1>
+        <p class="brand-tagline">Rise with Every Step</p>
     </div>
+
+    <!-- RIGHT FORM -->
+    <div class="auth-card">
+        <div class="auth-title">Create Account</div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if error %}
+            <div class="message error">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="input-box">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-box">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="input-box">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            </div>
+
+            <button class="auth-btn" type="submit">SIGN UP</button>
+        </form>
+
+        <div class="auth-links">
+            <a href="{% url 'login' %}">Already have an account?</a>
+        </div>
+    </div>
+
 </div>
 
 </body>

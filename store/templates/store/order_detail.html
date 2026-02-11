@@ -1,0 +1,24 @@
+<h2>Order Details</h2>
+
+<div style="border:1px solid #ddd; padding:20px; border-radius:10px">
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Date:</strong> {{ order.created_at }}</p>
+    <p><strong>Total:</strong> ₹{{ order.total_amount }}</p>
+
+    <hr>
+
+    <h3>Items</h3>
+    <ul>
+        {% for item in items %}
+            <li>
+                {{ item.product.name }} |
+                Size: {{ item.size }} |
+                Qty: {{ item.quantity }} |
+                ₹{{ item.price }}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<br>
+<a href="{% url 'account' %}">← Back to My Account</a>

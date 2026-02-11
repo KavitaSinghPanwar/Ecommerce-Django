@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Account</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #eef1f5;
+            margin: 0;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 20px;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            height: calc(100vh - 40px);
+            position: sticky;
+            top: 20px;
+        }
+
+        .profile-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #111;
+            color: white;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+
+        .profile-box strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .profile-box span {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .menu a:hover {
+            background: #f0f0f0;
+        }
+
+        .logout {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: #e53935;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        /* MAIN */
+        .main {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+
+        /* STATS */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .stat-card p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* PROFILE DETAILS */
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .profile-item {
+            background: #f6f7f9;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        /* ORDERS */
+        .orders {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .order-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 0.8fr;
+            gap: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .order-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-row strong {
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .view-btn {
+            text-decoration: none;
+            padding: 6px 10px;
+            background: #111;
+            color: white;
+            border-radius: 5px;
+            font-size: 13px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="profile-box">
+            <div class="avatar">{{ user.email|first|upper }}</div>
+            <strong>{{ user.email }}</strong>
+            <span>Joined {{ user.created_at|date:"M Y" }}</span>
+        </div>
+
+        <div class="menu">
+            <a href="{% url 'account' %}">🏠 Dashboard</a>
+            <a href="{% url 'edit-profile' %}">✏️ Edit Profile</a>
+            <a href="{% url 'cart' %}">🛒 Cart</a>
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <!-- STATS -->
+        <div class="stats">
+            <div class="stat-card">
+                <h3>{{ orders|length }}</h3>
+                <p>Total Orders</p>
+            </div>
+            <div class="stat-card">
+                <h3>₹{{ total_spent }}</h3>
+
+                <p>Total Spent</p>
+            </div>
+            <div class="stat-card">
+                <h3>Active</h3>
+                <p>Account Status</p>
+            </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="section">
+            <h3>Profile Information</h3>
+            <div class="profile-grid">
+                <div class="profile-item"><strong>Email:</strong> {{ user.email }}</div>
+                <div class="profile-item"><strong>Member Since:</strong> {{ user.created_at }}</div>
+                <div class="profile-item"><strong>Orders:</strong> {{ orders|length }}</div>
+                <div class="profile-item"><strong>Status:</strong> Active</div>
+            </div>
+        </div>
+
+        <!-- ORDERS -->
+        <div class="orders">
+            <h3>Recent Orders</h3>
+
+            {% if orders %}
+                {% for order in orders %}
+                <div class="order-row">
+                    <strong>#{{ order.id }}</strong>
+                    <span>₹{{ order.total_amount }}</span>
+                    <span>{{ order.created_at|date:"d M Y" }}</span>
+                    <a href="{% url 'order-detail' order.id %}" class="view-btn">View</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No orders yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

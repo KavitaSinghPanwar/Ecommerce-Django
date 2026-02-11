@@ -19,3 +19,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ("email", "created_at")
+from django.contrib import admin
+from django.urls import reverse
+from django.utils.html import format_html
+
+admin.site.site_header = "Ecommerce Admin"
